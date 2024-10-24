@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+      "mikoz.black-py",
+      "yzhang.markdown-all-in-one",
+      "ms-python.debugpy",
+      "ms-python.python",
+      "donjayamanne.python-environment-manager",
+      "littlefoxteam.vscode-python-test-adapter",
+      "ms-python.flake8",
+      "takumii.markdowntable",
+      "davidanson.vscode-markdownlint",
+      "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+    ]
+  }

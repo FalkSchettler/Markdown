@@ -1,0 +1,32 @@
+requirements:
+  Req.1:
+    description: It must be possible to create a code block as its own class.
+    acceptance_criteria:
+      - The code block must be able to be created with a specific python class.
+    sub_requirements: {}
+
+  Req.2:
+    description: It must be possible to create headings as their own class.
+    acceptance_criteria:
+      - The code block must be able to be created with a specific python class.
+    sub_requirements: {}
+
+  Req.3:
+    description: It must be possible to create paragraphs as their own class.
+    acceptance_criteria:
+      - The code block must be able to be created with a specific python class.
+    sub_requirements:
+      Req.3.1:
+        title: Sub-paragraph example
+        description: Sub-requirements can be added here.
+
+  Req.4:
+    description: It shall be possible to add a Table of Content.
+    acceptance_criteria:
+      - The Table of Content must be able to be added below every Chapter.
+    sub_requirements:
+      Req.4.1:
+        description: It shall be possible to add a Table of Content below every Chapter.
+      Req.4.2:
+        description: It shall be possible to configure the depth of the Table of Content.
+

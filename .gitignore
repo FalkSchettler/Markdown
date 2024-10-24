@@ -30,3 +30,8 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 .pyre/
+# Poetry
+poetry.lock
+# Traceability Report
+traceability_report.yaml
+

@@ -1,10 +1,10 @@
-from markdown_generator.interfaces import ChapterInterface
-from markdown_generator.markdown_formatter import MarkdownFormatter as MDF
-from markdown_generator.markdown_formatter import Formater as Formater
-from markdown_generator.text_block import TextBlock
-from markdown_generator.table import Table
-from markdown_generator.lists import OrderedList, UnorderedList
-from markdown_generator.table_of_content import TableOfContents
+from markdown.interfaces import ChapterInterface
+from markdown.markdown_formatter import MarkdownFormatter as MDF
+from markdown.text_block import TextBlock
+from markdown.table import Table
+from markdown.lists import OrderedList, UnorderedList
+from markdown.table_of_content import TableOfContents
+
 
 class Chapter(ChapterInterface):
 
@@ -29,29 +29,23 @@ class Chapter(ChapterInterface):
                 chapters.append(sec)
         return chapters
 
-    def set_generate_chapter_achore_ids(self, activate: bool):
-        self.__generate_chapter_anchor_id = activate
-
     def __str__(self):
-
-        if self.__toc != None:
-            self.__toc.configure()
 
         content: str = ""
 
-        if self.__generate_chapter_anchor_id:
+        if TableOfContents.get_with_chapter_achor_id():
             content += MDF.chapter_anchor_id(self.__headline) + MDF.LINE_BREAK
 
         # add header to content
         content += MDF.create_heading(self.__level, self.__headline) + MDF.LINE_BREAK
 
         # add sections to content
-        for section in self.__sections:
+        for i, section in enumerate(self.__sections):
             content += section.__str__()
 
         return content
 
-    def insert_text_block(self, text, position=None):
+    def add_text_block(self, text, position=None):
         text_block: TextBlock = TextBlock(text)
         if position is not None:
             self.__sections.insert(position, text_block)
@@ -60,26 +54,22 @@ class Chapter(ChapterInterface):
 
         return text_block
 
-    def append_text_block(self, text):
-        return self.insert_text_block(text, None)
-
-    def append_table(self, headers, rows):
+    def add_table(self, headers, rows):
         table: Table = Table(headers, rows)
         self.__sections.append(table)
         return table
 
-    def append_ordered_list(self, items=[]):
+    def add_ordered_list(self, items=[]):
         enumeration: OrderedList = OrderedList(items)
         self.__sections.append(enumeration)
         return enumeration
 
-    def append_unordered_list(self, items=[]):
+    def add_unordered_list(self, items=[]):
         enumeration: UnorderedList = UnorderedList(items)
         self.__sections.append(enumeration)
         return enumeration
 
-
-    def append_subchapter(self, subchapter):
+    def add_subchapter(self, subchapter):
         """
         Appends a subchapter to the current chapter.
 
@@ -93,7 +83,7 @@ class Chapter(ChapterInterface):
         self.__sections.append(subchapter)
         return subchapter
 
-    def append_toc(self, indent_spaces: int=2):
+    def add_toc(self, indent_spaces: int = 2):
         """
         Appends a Table of Contents (TOC) to the current document.
         Args:
@@ -102,7 +92,7 @@ class Chapter(ChapterInterface):
             TableOfContents: The appended Table of Contents object.
         """
         if self.__toc is None:
-            self.__toc: TableOfContents = TableOfContents(self)
+            self.__toc: TableOfContents = TableOfContents(chapter=self)
 
         self.__toc.set_indent_spaces(indent_spaces)
         self.__sections.append(self.__toc)

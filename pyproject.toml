@@ -1,11 +1,26 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry>=1.5.0"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
-name = "Markdown"
+[tool.poetry]
+name = "markdown"
 version = "0.1.0"
-description = "create structured markdown content"
-dependencies = [
-    # Deine Abhängigkeiten
-]
+description = "Ein Beispielprojekt"
+authors = ["Falk Schettler <falk.schettler@gmx.de>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+flake8 = "^7.1.1"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.0"
+pytest-cov = "^6.0"
+coveralls = "^4.0.0"
+pyyaml = "^6.0.2"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+black = "^24.10.0"
+

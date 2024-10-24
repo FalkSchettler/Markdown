@@ -1,17 +1,15 @@
 # import exceptions for non implemented methods
 from abc import ABC, abstractmethod
 
-class MarkdownElementInterface(ABC):
+
+class MarkdownElementInterface(ABC):  # pragma: no cover
 
     @abstractmethod
     def __str__(self) -> str:
         pass
 
-class ChapterInterface(MarkdownElementInterface):
 
-    @abstractmethod
-    def set_generate_chapter_achore_ids(self, activate: bool):
-        pass
+class ChapterInterface(MarkdownElementInterface):  # pragma: no cover
 
     @abstractmethod
     def get_level(self):
@@ -24,7 +22,3 @@ class ChapterInterface(MarkdownElementInterface):
     @abstractmethod
     def get_headline(self) -> str:
         pass
-
-    # @abstractmethod
-    # def get_table_of_content(self, indent_spaces, level_to_include) -> str:
-    #     pass

@@ -1,0 +1,61 @@
+name: Python Tests
+# Der Workflow wird ausgelöst, wenn Code in das Repository gepusht oder ein Pull Request erstellt wird
+on:
+  push:
+    #branches:
+    #  - main  # Führe Tests aus, wenn auf den Branch "main" gepusht wird
+  pull_request:
+    #branches:
+    #  - main  # Führe Tests bei Pull Requests zum "main"-Branch aus
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Der Workflow wird auf einem Ubuntu-Linux-Server ausgeführt
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: '1.5.1'  # Aktuelle Version von Poetry
+
+    - name: Change to project root
+      run: cd /home/runner/work/Markdown
+
+    - name: Install dependencies
+      run: |
+        poetry install
+
+    - name: Verify coveralls installation
+      run: |
+        poetry run coveralls --version
+
+    - name: Run tests with coverage
+      run: |
+        poetry run coverage run -m pytest
+        poetry run coverage report
+        poetry run coverage xml -o coverage.xml
+
+    - name: Upload coverage to Coveralls
+      run: |
+        poetry run coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+    - name: Upload traceability report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: traceability_report
+        path: traceability_report.yaml

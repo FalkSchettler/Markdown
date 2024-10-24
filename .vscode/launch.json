@@ -8,9 +8,10 @@
             "name": "Python Debugger: Markdown Doc",
             "type": "debugpy",
             "request": "launch",
-            "cwd": "${workspaceFolder}/examples",
-            "program": "${workspaceFolder}/examples/example.py",
-            "console": "integratedTerminal"
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/src/examples/example.py",
+            "console": "integratedTerminal",
+            
         },
     ]
 }

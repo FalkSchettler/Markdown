@@ -1,0 +1,50 @@
+name: Evaluate Traceability
+
+on:
+  workflow_run:
+    workflows: ["Python Tests"]  # Der Name des Test-Workflows
+    types:
+      - completed  # Startet, wenn der Workflow abgeschlossen ist
+
+jobs:
+  evaluate-traceability:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Lade das Repository (optional, falls Code benötigt wird)
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # 2. Lade das Traceability-Report-Artefakt herunter
+      - name: Download traceability report
+        uses: actions/download-artifact@v3
+        with:
+          name: traceability_report
+
+      # 3. Installiere `yq` (falls nicht standardmäßig verfügbar)
+      - name: Install yq
+        run: sudo apt-get install -y yq
+
+      # 4. Parse und analysiere den Traceability-Bericht
+      - name: Parse and evaluate traceability report
+        run: |
+          echo "Evaluating Traceability Report..."
+
+          # Extrahiere getestete und ungetestete Anforderungen
+          TESTED_REQUIREMENTS=$(yq '.tested_requirements | length' traceability_report.yaml)
+          UNTESTED_REQUIREMENTS=$(yq '.untested_requirements | length' traceability_report.yaml)
+
+          # Liste getestete und ungetestete Anforderungen
+          echo "Tested Requirements:"
+          yq '.tested_requirements[]' traceability_report.yaml || echo "None"
+
+          echo "Untested Requirements:"
+          yq '.untested_requirements[]' traceability_report.yaml || echo "None"
+
+          # Überprüfe, ob ungetestete Anforderungen vorhanden sind
+          if [ "$UNTESTED_REQUIREMENTS" -gt 0 ]; then
+            echo "There are $UNTESTED_REQUIREMENTS untested requirements!"
+            exit 1
+          else
+            echo "All requirements are tested."
+          fi
