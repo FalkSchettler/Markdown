@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.egg-info/
+*.eggs/
+*.whl
+*.manifest
+*.spec
+pip-wheel-metadata/
+*.log
+*.pot
+*.mo
+*.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytype/
+.mypy_cache/
+.dmypy.json
+.pyre/
+# Poetry
+poetry.lock
+# Traceability Report
+traceability_report.yaml
+

@@ -1,0 +1,98 @@
+name: Python Tests
+
+# Define the Python version and Poetry version as variables
+env:
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.5.1"
+
+# Der Workflow wird ausgelöst, wenn Code in das Repository gepusht oder ein Pull Request erstellt wird
+on:
+  push:
+    #branches:
+    #  - main  # Führe Tests aus, wenn auf den Branch "main" gepusht wird
+  pull_request:
+    #branches:
+    #  - main  # Führe Tests bei Pull Requests zum "main"-Branch aus
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Der Workflow wird auf einem Ubuntu-Linux-Server ausgeführt
+
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ env.POETRY_VERSION }}  # Aktuelle Version von Poetry
+
+    - name: Change to project root
+      run: cd /home/runner/work/Markdown
+
+    - name: Install dependencies
+      run: |
+        poetry install
+
+    - name: Verify coveralls installation
+      run: |
+        poetry run coveralls --version
+
+    - name: Run tests with coverage
+      run: |
+        poetry run coverage run -m pytest
+        poetry run coverage report
+        poetry run coverage xml -o coverage.xml
+
+    - name: Upload coverage to Coveralls
+      run: |
+        poetry run coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+    - name: Upload traceability report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: traceability_report
+        path: traceability_report.yaml
+
+  evaluate-traceability:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}  # Aktuelle Version von Poetry
+
+      - name: Change to project root
+        run: cd /home/runner/work/Markdown
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Download traceability report
+        uses: actions/download-artifact@v4
+        with:
+          name: traceability_report
+
+      - name: Run Traceability Evaluation
+        run: poetry run python tests/evaluate_traceability.py
